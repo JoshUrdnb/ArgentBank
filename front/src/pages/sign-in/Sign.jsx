@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { signIn } from '../../store/auth/authSlice.jsx'
 import { loginAPI } from '../../data/fetchApi.jsx'
+import { getProfile } from '../../data/fetchApi.jsx'
 import './sign.scss'
 
 export default function Sign() {
@@ -16,9 +17,10 @@ export default function Sign() {
 
         try {
             const token = await loginAPI({ email, password }) // Deux states
+            const profile = await getProfile(token)
 
             dispatch(signIn({
-                user: { email },
+                user: profile,
                 token
             }))
 

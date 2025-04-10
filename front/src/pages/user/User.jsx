@@ -1,11 +1,13 @@
 import './user.scss'
+import { useSelector } from 'react-redux'
 
 export default function User() {
+    const user = useSelector((state) => state.auth.user)
+
     return (
         <div className='bg-dark'>
-
             <div className="header">
-                <h1>Welcome back<br />Tony Jarvis!</h1>
+                <h1>Welcome back<br />{user?.firstName} {user?.lastName}!</h1>
                 <button className="edit-button">Edit Name</button>
             </div>
 
@@ -46,7 +48,6 @@ export default function User() {
                     <button className="transaction-button">View transactions</button>
                 </div>
             </section>
-            
         </div>
     )
 }
