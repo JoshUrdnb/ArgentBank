@@ -1,7 +1,7 @@
-import './user.scss'
+import './profile.scss'
 import { useSelector } from 'react-redux'
 
-export default function User() {
+export default function Profile() {
     const user = useSelector((state) => state.auth.user)
 
     return (

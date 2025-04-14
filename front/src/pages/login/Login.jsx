@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { signIn } from '../../store/auth/authSlice.jsx'
 import { loginAPI } from '../../data/fetchApi.jsx'
 import { getProfile } from '../../data/fetchApi.jsx'
-import './sign.scss'
+import './login.scss'
 
-export default function Sign() {
+export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const dispatch = useDispatch() // Dispatch me permet de déclancher l'action présent dans authSlice.
@@ -24,7 +24,7 @@ export default function Sign() {
                 token
             }))
 
-            navigate('/user')
+            navigate('/profile')
         } catch (err) {
             console.error(err)
             alert('Échec de la connexion : ' + err.message)
