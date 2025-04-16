@@ -2,7 +2,8 @@ import './profile.scss'
 import { useSelector } from 'react-redux'
 
 export default function Profile() {
-    const user = useSelector((state) => state.auth.user)
+    // state.auth.user : permet d'accéder à l'état global. Ici je vais chercher les infos utilisateur depuis le store Redux, donc depuis ce que j'ai mis avec dispatch(signIn(...)).
+    const user = useSelector((state) => state.auth.user) 
 
     return (
         <div className='bg-dark'>

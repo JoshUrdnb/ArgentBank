@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState } from 'react' // Pour le formulaire
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { signIn } from '../../store/auth/authSlice.jsx'
-import { loginAPI } from '../../data/fetchApi.jsx'
-import { getProfile } from '../../data/fetchApi.jsx'
+import { loginAPI } from '../../data/fetchApi.jsx' // Je récupères le token.
+import { getProfile } from '../../data/fetchApi.jsx' // Je récupères les infos utilisateur.
 import './login.scss'
 
 export default function Login() {
@@ -19,7 +19,11 @@ export default function Login() {
             const token = await loginAPI({ email, password }) // Deux states
             const profile = await getProfile(token)
 
-            dispatch(signIn({
+            /* dispatch : déclenche l'action signIn de authSlice, qui :
+            met isUserSignIn à true
+            stocke user et token dans le store
+            Du coup, tout le reste de l’appli peut accéder à ces données, comme ma page Profile. */
+            dispatch(signIn({ // Dispatcher des actions. Pour stocker l’état de connexion avec Redux.
                 user: profile,
                 token
             }))
