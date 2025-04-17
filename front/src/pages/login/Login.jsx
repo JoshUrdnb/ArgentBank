@@ -1,7 +1,7 @@
 import { useState } from 'react' // Pour le formulaire
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { loginUser } from '../../store/user/userSlice.jsx'
+import { loginUser, getUserProfile } from '../../store/user/userSlice.jsx'
 import './login.scss'
 
 export const Login = () => {
@@ -21,11 +21,12 @@ export const Login = () => {
         }
         dispatch(loginUser(userCredentials)).then((result) => {
             if (result.payload) {
+                dispatch(getUserProfile())
                 setEmail('')
                 setPassword('')
                 navigate('/profile')
             }
-        })
+        })        
     }
 
     return (
