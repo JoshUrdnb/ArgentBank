@@ -1,46 +1,39 @@
 import { useState } from 'react' // Pour le formulaire
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { signIn } from '../../store/auth/authSlice.jsx'
-import { loginAPI } from '../../data/fetchApi.jsx' // Je récupères le token.
-import { getProfile } from '../../data/fetchApi.jsx' // Je récupères les infos utilisateur.
+import { loginUser } from '../../store/user/userSlice.jsx'
 import './login.scss'
 
-export default function Login() {
+export const Login = () => {
+    // states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const dispatch = useDispatch() // Dispatch me permet de déclancher l'action présent dans authSlice.
-    const navigate = useNavigate() // Navigate me permet d'aller vers la page /user si le login est réussi.
 
-    const handleSubmit = async (e) => {
+    // redux states
+    const {loading, error} = useSelector(state => state.user)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const handleLoginSubmit = (e) => {
         e.preventDefault()
-
-        try {
-            const token = await loginAPI({ email, password }) // Deux states
-            const profile = await getProfile(token)
-
-            /* dispatch : déclenche l'action signIn de authSlice, qui :
-            met isUserSignIn à true
-            stocke user et token dans le store
-            Du coup, tout le reste de l’appli peut accéder à ces données, comme ma page Profile. */
-            dispatch(signIn({ // Dispatcher des actions. Pour stocker l’état de connexion avec Redux.
-                user: profile,
-                token
-            }))
-
-            navigate('/profile')
-        } catch (err) {
-            console.error(err)
-            alert('Échec de la connexion : ' + err.message)
+        let userCredentials = {
+            email,
+            password
         }
+        dispatch(loginUser(userCredentials)).then((result) => {
+            if (result.payload) {
+                setEmail('')
+                setPassword('')
+                navigate('/profile')
+            }
+        })
     }
 
-    return ( // Placer le formulaire dans un composant :
+    return (
         <div className='bg-dark'>
             <section className="sign-in-content">
                 <i className="fa fa-user-circle sign-in-icon"></i>
                 <h1>Sign In</h1>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleLoginSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="email">Email</label>
                         <input
@@ -65,9 +58,16 @@ export default function Login() {
                         <input type="checkbox" id="remember-me" />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
-                    <button type="submit" className="sign-in-button">Sign In</button>
+                    <button type="submit" className="sign-in-button">
+                        {loading?'Loading...':'Sign In'}
+                    </button>
+                    {error && (
+                        <div className="error-message" role='alert'>{error}</div>
+                    )}
                 </form>
             </section>
         </div>
     )
 }
+
+export default Login
