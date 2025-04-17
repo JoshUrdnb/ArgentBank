@@ -19,6 +19,12 @@
     margin-right: 0.5rem;
 }
 
+.log-out-button {
+    all: unset;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .main-nav-item:hover {
     text-decoration: underline;
 }

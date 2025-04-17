@@ -21,6 +21,13 @@ const userSlice = createSlice({
         error: null,
     },
 
+    reducers: {
+        logout: (state) => {
+            state.user = null
+            localStorage.removeItem('user')
+        },
+    },
+
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.pending, (state) => {
@@ -48,3 +55,5 @@ const userSlice = createSlice({
 
 // Export du reducer (C’est le reducer que je connecte dans store.js)
 export default userSlice.reducer
+// Export vers Header
+export const { logout } = userSlice.actions
