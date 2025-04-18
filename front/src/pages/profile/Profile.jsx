@@ -1,15 +1,55 @@
 import './profile.scss'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { updateUserProfile } from '../../store/user/userSlice.jsx'
 
 export default function Profile() {
-    // state.auth.user : permet d'accéder à l'état global. Ici je vais chercher les infos utilisateur depuis le store Redux, donc depuis ce que j'ai mis avec dispatch(signIn(...)).
-    const user = useSelector((state) => state.user.user) 
+    const user = useSelector((state) => state.user.user)
+    const dispatch = useDispatch()
+
+    const [isEditing, setIsEditing] = useState(false)
+    const [firstName, setFirstName] = useState(user?.firstName || '')
+    const [lastName, setLastName] = useState(user?.lastName || '')
+
+    const handleSave = () => {
+        dispatch(updateUserProfile({ firstName, lastName }))
+        setIsEditing(false)
+    }
+
+    const handleCancel = () => {
+        setFirstName(user?.firstName || '')
+        setLastName(user?.lastName || '')
+        setIsEditing(false)
+    }
 
     return (
         <div className='bg-dark'>
+
             <div className="header">
-                <h1>Welcome back<br />{user?.firstName} {user?.lastName}!</h1>
-                <button className="edit-button">Edit Name</button>
+                {!isEditing ? (
+                    <>
+                        <h1>Welcome back<br />{user?.firstName} {user?.lastName}!</h1>
+                        <button className="edit-button" onClick={() => setIsEditing(true)}>Edit Name</button>
+                    </>
+                ) : (
+                    <div className="edit-form">
+                        <h1>Edit Name</h1>
+                        <input
+                            type="text"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                        <div>
+                            <button className="save-button" onClick={handleSave}>Save</button>
+                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <h2 className="sr-only">Accounts</h2>

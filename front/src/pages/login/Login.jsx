@@ -13,15 +13,15 @@ export const Login = () => {
     const {loading, error} = useSelector(state => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault()
         let userCredentials = {
             email,
             password
         }
-        dispatch(loginUser(userCredentials)).then((result) => {
+        await dispatch(loginUser(userCredentials)).then( async (result) => {
             if (result.payload) {
-                dispatch(getUserProfile())
+                await dispatch(getUserProfile())
                 setEmail('')
                 setPassword('')
                 navigate('/profile')

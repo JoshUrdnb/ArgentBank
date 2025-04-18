@@ -29,6 +29,23 @@ export const getUserProfile = createAsyncThunk(
     }
 )
 
+export const updateUserProfile = createAsyncThunk(
+    'user/updateProfile',
+    async ({ firstName, lastName }) => {
+        const token = localStorage.getItem('token')
+        const response = await axios.put(
+            `${hostName}/api/v1/user/profile`,
+            { firstName, lastName },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        return response.data.body
+    }
+)
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -72,6 +89,20 @@ const userSlice = createSlice({
             .addCase(getUserProfile.rejected, (state) => {
                 state.loading = false
                 state.error = 'Failed to fetch user profile'
+            })
+
+            .addCase(updateUserProfile.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(updateUserProfile.fulfilled, (state, action) => {
+                state.loading = false
+                state.user = action.payload
+                state.error = null
+            })
+            .addCase(updateUserProfile.rejected, (state) => {
+                state.loading = false
+                state.error = 'Failed to update user profile'
             })
     },
 })
