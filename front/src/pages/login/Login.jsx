@@ -8,9 +8,10 @@ export const Login = () => {
     // states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
 
     // redux states
-    const {loading, error} = useSelector(state => state.user)
+    const { loading, error } = useSelector(state => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleLoginSubmit = async (e) => {
@@ -19,14 +20,18 @@ export const Login = () => {
             email,
             password
         }
-        await dispatch(loginUser(userCredentials)).then( async (result) => {
+        await dispatch(loginUser(userCredentials)).then(async (result) => {
             if (result.payload) {
-                await dispatch(getUserProfile())
-                setEmail('')
-                setPassword('')
+                const token = result.payload
+                if (rememberMe) {
+                    localStorage.setItem('token', token)
+                } else {
+                    sessionStorage.setItem('token', token)
+                }
+                await dispatch(getUserProfile()) // Appel API pour avoir les dernières infos
                 navigate('/profile')
             }
-        })        
+        })
     }
 
     return (
@@ -56,11 +61,16 @@ export const Login = () => {
                         />
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" />
+                        <input
+                            type="checkbox"
+                            id="remember-me"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                        />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
                     <button type="submit" className="sign-in-button">
-                        {loading?'Loading...':'Sign In'}
+                        {loading ? 'Loading...' : 'Sign In'}
                     </button>
                     {error && (
                         <div className="error-message" role='alert'>{error}</div>

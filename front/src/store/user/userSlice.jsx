@@ -2,20 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import hostName from '../../data/config.jsx'
 
+// userSlice.jsx
 export const loginUser = createAsyncThunk(
     'user/login',
     async (userCredentials) => {
         const response = await axios.post(`${hostName}/api/v1/user/login`, userCredentials)
-        const token = response.data.body.token
-        localStorage.setItem('token', token)
-        return token
+        return response.data.body.token
     }
 )
 
 export const getUserProfile = createAsyncThunk(
     'user/profile',
     async () => {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token')
         const response = await axios.post(
             `${hostName}/api/v1/user/profile`,
             {},
@@ -32,7 +31,7 @@ export const getUserProfile = createAsyncThunk(
 export const updateUserProfile = createAsyncThunk(
     'user/updateProfile',
     async ({ firstName, lastName }) => {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token')
         const response = await axios.put(
             `${hostName}/api/v1/user/profile`,
             { firstName, lastName },
@@ -52,13 +51,14 @@ const userSlice = createSlice({
         loading: false,
         user: null,
         error: null,
-        token: localStorage.getItem('token') || null,
+        token: localStorage.getItem('token') || sessionStorage.getItem('token') || null,
     },
     reducers: {
         logout: (state) => {
             state.user = null
             state.token = null
             localStorage.removeItem('token')
+            sessionStorage.removeItem('token')
         },
     },
     extraReducers: (builder) => {
