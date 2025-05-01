@@ -5,6 +5,7 @@ import { updateUserProfile } from '../../store/user/userSlice.jsx'
 
 export default function Profile() {
     const user = useSelector((state) => state.user.user)
+    const { error } = useSelector((state) => state.user)
     const dispatch = useDispatch()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -20,6 +21,10 @@ export default function Profile() {
         setFirstName(user?.firstName || '')
         setLastName(user?.lastName || '')
         setIsEditing(false)
+    }
+
+    if (error) {
+        return <div className="error-message">{error}</div>
     }
 
     return (

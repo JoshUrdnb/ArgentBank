@@ -13,18 +13,27 @@ export const loginUser = createAsyncThunk(
 
 export const getUserProfile = createAsyncThunk(
     'user/profile',
-    async () => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token')
-        const response = await axios.post(
-            `${hostName}/api/v1/user/profile`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+            const response = await axios.post(
+                `${hostName}/api/v1/user/profile`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            return response.data.body
+        } catch (error) {
+            if (error.response && error.response.status === 503) {
+                // Erreur spécifique 503 (Service Unavailable)
+                return rejectWithValue('Service temporairement indisponible. Veuillez réessayer plus tard.')
             }
-        )
-        return response.data.body
+            // Autres erreurs
+            return rejectWithValue('Échec de la récupération du profil utilisateur.')
+        }
     }
 )
 
