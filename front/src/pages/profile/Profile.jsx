@@ -25,28 +25,30 @@ export default function Profile() {
     return (
         <div className='bg-dark'>
 
-            <div className="header">
+            <div className="form-container">
                 {!isEditing ? (
                     <>
-                        <h1>Welcome back<br />{user?.firstName} {user?.lastName}!</h1>
+                        <h1>Welcome back<br />{user?.firstName} {user?.lastName} !</h1>
                         <button className="edit-button" onClick={() => setIsEditing(true)}>Edit Name</button>
                     </>
                 ) : (
                     <div className="edit-form">
                         <h1>Edit Name</h1>
-                        <input
-                            type="text"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                        />
-                        <input
-                            type="text"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                        />
-                        <div>
-                            <button className="save-button" onClick={handleSave}>Save</button>
-                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                        <div className='input-container'>
+                            <input className="input-field"
+                                type="text"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                            <input className="input-field"
+                                type="text"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+                        <div className='button-container'>
+                            <button className="save-button edit-button-style" onClick={handleSave}>Save</button>
+                            <button className="cancel-button edit-button-style" onClick={handleCancel}>Cancel</button>
                         </div>
                     </div>
                 )}
