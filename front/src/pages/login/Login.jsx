@@ -37,7 +37,7 @@ export const Login = () => {
     }
 
     return (
-        <div className='bg-dark'>
+        <div className='main bg-dark'>
             <section className="sign-in-content">
                 <FontAwesomeIcon icon={faUserCircle} />
                 <h1>Sign In</h1>

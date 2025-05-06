@@ -28,7 +28,7 @@ export default function Profile() {
     }
 
     return (
-        <div className='bg-dark'>
+        <div className='main bg-dark'>
 
             <div className="form-container">
                 {!isEditing ? (

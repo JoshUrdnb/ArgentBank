@@ -30,18 +30,18 @@ export default function Header() {
                     <>
                         <Link to="/profile" className="main-nav-item">
                             <FontAwesomeIcon icon={faUserCircle} />
-                            {user.firstName}
+                        <span className="icon-text-spacing">{user.firstName}</span>
                         </Link>
 
                         <button className="main-nav-item log-out-button" onClick={handleLogout}>
                             <FontAwesomeIcon icon={faSignOutAlt} />
-                            Sign Out
+                        <span className="icon-text-spacing">Sign Out</span>
                         </button>
                     </>
                 ) : (
                     <Link to="/login" className="main-nav-item">
                         <FontAwesomeIcon icon={faUserCircle} />
-                        Sign In
+                        <span className="icon-text-spacing">Sign In</span>
                     </Link>
                 )}
             </div>

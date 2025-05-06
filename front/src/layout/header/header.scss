@@ -14,9 +14,19 @@
     color: #42b983;
 }
 
+.main-nav-items-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .main-nav-item {
     text-decoration: none;
     margin-right: 0.5rem;
+}
+
+.icon-text-spacing {
+    margin-left: .5rem;
 }
 
 .log-out-button {
