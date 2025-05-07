@@ -1,13 +1,14 @@
 import './banner.scss'
+import banner from './banner.json'
 
 function Banner() {
     return (
         <div className="banner">
             <section className="banner-content">
-                <p className="subtitle">No fees.</p>
-                <p className="subtitle">No minimum deposit.</p>
-                <p className="subtitle">High interest rates.</p>
-                <p className="text">Open a savings account with Argent Bank today!</p>
+                {banner.subtitles.map((line, index) => (
+                    <p className="subtitle" key={index}>{line}</p>
+                ))}
+                <p className="text">{banner.text}</p>
             </section>
         </div>
     )
