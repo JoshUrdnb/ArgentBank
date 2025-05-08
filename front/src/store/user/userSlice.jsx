@@ -83,7 +83,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state) => {
                 state.loading = false
-                state.error = 'Email or password is incorrect'
+                state.error = 'Données de connexion invalides'
             })
 
             .addCase(getUserProfile.pending, (state) => {
