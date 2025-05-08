@@ -2,15 +2,23 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import hostName from '../../data/config.jsx'
 
-// userSlice.jsx
+// LOGIN
 export const loginUser = createAsyncThunk(
     'user/login',
-    async (userCredentials) => {
-        const response = await axios.post(`${hostName}/api/v1/user/login`, userCredentials)
-        return response.data.body.token
+    async (userCredentials, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${hostName}/api/v1/user/login`, userCredentials)
+            return response.data.body.token
+        } catch (error) {
+            if (error.response && error.response.status === 503) {
+                return rejectWithValue('Service temporairement indisponible. Veuillez réessayer plus tard.')
+            }
+            return rejectWithValue('Données de connexion invalides')
+        }
     }
 )
 
+// GET PROFILE
 export const getUserProfile = createAsyncThunk(
     'user/profile',
     async (_, { rejectWithValue }) => {
@@ -28,29 +36,35 @@ export const getUserProfile = createAsyncThunk(
             return response.data.body
         } catch (error) {
             if (error.response && error.response.status === 503) {
-                // Erreur spécifique 503 (Service Unavailable)
                 return rejectWithValue('Service temporairement indisponible. Veuillez réessayer plus tard.')
             }
-            // Autres erreurs
             return rejectWithValue('Échec de la récupération du profil utilisateur.')
         }
     }
 )
 
+// UPDATE PROFILE
 export const updateUserProfile = createAsyncThunk(
     'user/updateProfile',
-    async ({ firstName, lastName }) => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token')
-        const response = await axios.put(
-            `${hostName}/api/v1/user/profile`,
-            { firstName, lastName },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+    async ({ firstName, lastName }, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+            const response = await axios.put(
+                `${hostName}/api/v1/user/profile`,
+                { firstName, lastName },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            return response.data.body
+        } catch (error) {
+            if (error.response && error.response.status === 503) {
+                return rejectWithValue('Service temporairement indisponible. Veuillez réessayer plus tard.')
             }
-        )
-        return response.data.body
+            return rejectWithValue('Échec de la mise à jour du profil.')
+        }
     }
 )
 
@@ -72,6 +86,7 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // LOGIN
             .addCase(loginUser.pending, (state) => {
                 state.loading = true
                 state.error = null
@@ -81,11 +96,12 @@ const userSlice = createSlice({
                 state.token = action.payload
                 state.error = null
             })
-            .addCase(loginUser.rejected, (state) => {
+            .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false
-                state.error = 'Données de connexion invalides'
+                state.error = action.payload || 'Erreur lors de la connexion'
             })
 
+            // GET PROFILE
             .addCase(getUserProfile.pending, (state) => {
                 state.loading = true
                 state.error = null
@@ -95,11 +111,12 @@ const userSlice = createSlice({
                 state.user = action.payload
                 state.error = null
             })
-            .addCase(getUserProfile.rejected, (state) => {
+            .addCase(getUserProfile.rejected, (state, action) => {
                 state.loading = false
-                state.error = 'Failed to fetch user profile'
+                state.error = action.payload || 'Échec de la récupération du profil utilisateur.'
             })
 
+            // UPDATE PROFILE
             .addCase(updateUserProfile.pending, (state) => {
                 state.loading = true
                 state.error = null
@@ -109,9 +126,9 @@ const userSlice = createSlice({
                 state.user = action.payload
                 state.error = null
             })
-            .addCase(updateUserProfile.rejected, (state) => {
+            .addCase(updateUserProfile.rejected, (state, action) => {
                 state.loading = false
-                state.error = 'Failed to update user profile'
+                state.error = action.payload || 'Échec de la mise à jour du profil.'
             })
     },
 })
