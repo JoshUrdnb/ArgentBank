@@ -21,22 +21,32 @@ export const loginUser = createAsyncThunk(
 // GET PROFILE
 export const getUserProfile = createAsyncThunk(
     'user/profile',
-    async (_, { rejectWithValue }) => {
-        try {
-            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+    async (token, { rejectWithValue }) => { // token en argument
+        try {            
+            if (!token) { // Vérifier si le token est bien reçu
+                console.error('Token manquant pour getUserProfile (argument)')
+                return rejectWithValue('Token manquant pour la récupération du profil.')
+            }
+            // console.log('Token utilisé pour getUserProfile (depuis argument):', token)
+            
             const response = await axios.post(
                 `${hostName}/api/v1/user/profile`,
-                {},
+                {}, // Corps de la requête POST, vide dans mon cas
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             )
+            // console.log('Headers envoyés:', response.config.headers)
             return response.data.body
         } catch (error) {
             if (error.response && error.response.status === 503) {
                 return rejectWithValue('Service temporairement indisponible. Veuillez réessayer plus tard.')
+            }
+            // Logguer plus d'informations sur l'erreur 401
+            if (error.response && error.response.data) {
+                console.error('Erreur API (getUserProfile):', error.response.data)
             }
             return rejectWithValue('Échec de la récupération du profil utilisateur.')
         }

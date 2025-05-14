@@ -23,14 +23,15 @@ export const Login = () => {
             password
         }
         await dispatch(loginUser(userCredentials)).then(async (result) => {
-            if (result.payload) {
+            if (result.meta.requestStatus === 'fulfilled' && result.payload) {
                 const token = result.payload
                 if (rememberMe) {
                     localStorage.setItem('token', token)
                 } else {
                     sessionStorage.setItem('token', token)
                 }
-                await dispatch(getUserProfile()) // Appel API pour avoir les dernières infos
+                // console.log('Token juste avant getUserProfile:', token)
+                await dispatch(getUserProfile(token))
                 navigate('/profile')
             }
         })
