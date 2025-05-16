@@ -53,9 +53,6 @@ export const Login = () => {
                             required
                         />
                     </div>
-                    {error && (
-                        <div className="error-message" role='alert'>{error}</div>
-                    )}
                     <div className="input-wrapper">
                         <label htmlFor="password">Password</label>
                         <input
@@ -66,9 +63,6 @@ export const Login = () => {
                             required
                         />
                     </div>
-                    {error && (
-                        <div className="error-message" role='alert'>{error}</div>
-                    )}
                     <div className="input-remember">
                         <input
                             type="checkbox"
@@ -78,6 +72,9 @@ export const Login = () => {
                         />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
+                    {error && (
+                        <div className="error-message" role='alert'>{error}</div>
+                    )}
                     <button type="submit" className="sign-in-button">
                         {loading ? 'Loading...' : 'Sign In'}
                     </button>

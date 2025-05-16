@@ -3,7 +3,7 @@ import userReducer from './user/userSlice' // Import du reducer.
 
 export const store = configureStore({ // On crée le store de Redux et on y déclare nos reducers.
     reducer: { // On passe tous les "slices" de notre état global.
-        user: userReducer, // Le bout de state qui s’appelle auth, il sera géré par authReducer.
+        user: userReducer, // Le bout de state qui s’appelle user, il sera géré par userReducer.
     },
 })
 

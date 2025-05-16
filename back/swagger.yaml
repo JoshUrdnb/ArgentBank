@@ -311,7 +311,7 @@ definitions:
       amount:
         type: number
         format: float
-        example: 50
+        example: -50
       balance:
         type: number
         format: float
